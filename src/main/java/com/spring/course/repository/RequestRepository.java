@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface RequestRepository extends JpaRepository<Request, Long> {
 
-    List<Request> findAllOwnerId(Long id);
+    List<Request> findAllByOwnerId(Long id);
 }
