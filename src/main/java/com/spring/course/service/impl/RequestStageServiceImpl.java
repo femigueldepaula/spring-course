@@ -1,6 +1,7 @@
 package com.spring.course.service.impl;
 
 import com.spring.course.domain.RequestStage;
+import com.spring.course.exception.NotFoundException;
 import com.spring.course.repository.RequestRepository;
 import com.spring.course.repository.RequestStageRepository;
 import com.spring.course.service.RequestStageService;
@@ -32,7 +33,7 @@ public class RequestStageServiceImpl implements RequestStageService {
     @Override
     public RequestStage getById(Long id) {
         Optional<RequestStage> result = requestStageRepository.findById(id);
-        return result.get();
+        return result.orElseThrow(() -> new NotFoundException("There are note stage with id = " + id));
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.spring.course.service.impl;
 
 import com.spring.course.domain.Request;
 import com.spring.course.domain.enums.RequestState;
+import com.spring.course.exception.NotFoundException;
 import com.spring.course.repository.RequestRepository;
 import com.spring.course.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public Request getById(Long id) {
         Optional<Request> result = requestRepository.findById(id);
-        return result.get();
+        return result.orElseThrow(() -> new NotFoundException("There are note request with id = " + id));
     }
 
     @Override

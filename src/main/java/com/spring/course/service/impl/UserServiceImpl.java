@@ -1,6 +1,7 @@
 package com.spring.course.service.impl;
 
 import com.spring.course.domain.User;
+import com.spring.course.exception.NotFoundException;
 import com.spring.course.repository.UserRepository;
 import com.spring.course.service.UserService;
 import com.spring.course.util.HashUtil;
@@ -31,7 +32,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getById(Long id) {
         Optional<User> result = userRepository.findById(id);
-        return result.get();
+        return result.orElseThrow(() -> new NotFoundException("There are note user with id = " + id));
     }
 
     @Override
