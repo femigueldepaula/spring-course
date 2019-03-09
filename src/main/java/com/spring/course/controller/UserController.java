@@ -1,7 +1,9 @@
 package com.spring.course.controller;
 
+import com.spring.course.domain.Request;
 import com.spring.course.domain.User;
 import com.spring.course.dto.UserLoginDto;
+import com.spring.course.service.RequestService;
 import com.spring.course.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RequestService requestService;
 
     @PostMapping
     public ResponseEntity<User> save(@RequestBody User user){
@@ -45,5 +50,10 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody UserLoginDto userLoginDto){
         return ResponseEntity.ok(userService.login(userLoginDto.getEmail(), userLoginDto.getPassword()));
+    }
+
+    @GetMapping("/{id}/requests")
+    public ResponseEntity<List<Request>> listAllRequestsById(@PathVariable("id") Long id){
+        return ResponseEntity.ok(requestService.listaAllByOwnerId(id));
     }
 }
