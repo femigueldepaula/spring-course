@@ -1,8 +1,10 @@
 package com.spring.course.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.spring.course.domain.enums.RequestState;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -38,6 +40,7 @@ public class Request {
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
+    @Getter(onMethod = @__({@JsonIgnore}))
     @OneToMany(mappedBy = "request")
     private List<RequestStage> stages = new ArrayList<>();
 }

@@ -1,10 +1,9 @@
 package com.spring.course.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.spring.course.domain.enums.Role;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -27,6 +26,8 @@ public class User {
     @Column(length = 75, nullable = false, unique = true)
     private String email;
 
+    @Getter(onMethod = @__({@JsonIgnore}))
+    @Setter(onMethod = @__({@JsonProperty}))
     @Column(length = 100, nullable = false)
     private String password;
 
@@ -34,9 +35,11 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Getter(onMethod = @__({@JsonIgnore}))
     @OneToMany(mappedBy = "owner")
     private List<Request> requests = new ArrayList<>();
 
+    @Getter(onMethod = @__({@JsonIgnore}))
     @OneToMany(mappedBy = "owner")
     private List<RequestStage> stages = new ArrayList<>();
 }
