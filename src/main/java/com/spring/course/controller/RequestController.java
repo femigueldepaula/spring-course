@@ -45,7 +45,8 @@ public class RequestController {
     }
 
     @GetMapping
-    public ResponseEntity<PageModel<Request>> listAll(@RequestParam("page") int page, @RequestParam("size") int size) {
+    public ResponseEntity<PageModel<Request>> listAll(@RequestParam(value = "page", defaultValue = "0") int page,
+                                                      @RequestParam(value = "size", defaultValue = "10") int size) {
         PageRequestModel pageRequestModel = new PageRequestModel(page, size);
         PageModel<Request> pageModel = requestService.listAllOnLazyMode(pageRequestModel);
 

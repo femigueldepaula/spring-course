@@ -45,7 +45,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<PageModel<User>> listAll(@RequestParam("page") int page, @RequestParam("size") int size){
+    public ResponseEntity<PageModel<User>> listAll(@RequestParam(value = "page", defaultValue = "0") int page,
+                                                   @RequestParam(value = "size", defaultValue = "10") int size){
         PageRequestModel pageRequestModel = new PageRequestModel(page, size);
 
         return ResponseEntity.ok(userService.listAllOnLazyMode(pageRequestModel));
@@ -57,7 +58,9 @@ public class UserController {
     }
 
     @GetMapping("/{id}/requests")
-    public ResponseEntity<PageModel<Request>> listAllRequestsById(@RequestParam("page") int page, @RequestParam("size") int size, @PathVariable("id") Long id){
+    public ResponseEntity<PageModel<Request>> listAllRequestsById(@RequestParam(value = "page", defaultValue = "0") int page,
+                                                                  @RequestParam(value = "size", defaultValue = "10") int size,
+                                                                  @PathVariable("id") Long id){
 
         PageRequestModel pageRequestModel = new PageRequestModel(page, size);
         PageModel<Request> pageModel = requestService.listAllByOwnerIdOnLazyModel(id,pageRequestModel);
