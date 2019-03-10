@@ -2,6 +2,8 @@ package com.spring.course.controller;
 
 import com.spring.course.domain.Request;
 import com.spring.course.domain.RequestStage;
+import com.spring.course.model.PageModel;
+import com.spring.course.model.PageRequestModel;
 import com.spring.course.service.RequestService;
 import com.spring.course.service.RequestStageService;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
 @RestController
@@ -42,8 +45,11 @@ public class RequestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Request>> listAll() {
-        return ResponseEntity.ok(requestService.listaAll());
+    public ResponseEntity<PageModel<Request>> listAll(@RequestParam("page") int page, @RequestParam("size") int size) {
+        PageRequestModel pageRequestModel = new PageRequestModel(page, size);
+        PageModel<Request> pageModel = requestService.listAllOnLazyMode(pageRequestModel);
+
+        return ResponseEntity.ok(pageModel);
     }
 
     @GetMapping("/{id}/request-stages")

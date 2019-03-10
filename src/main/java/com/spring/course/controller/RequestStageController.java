@@ -1,6 +1,8 @@
 package com.spring.course.controller;
 
 import com.spring.course.domain.RequestStage;
+import com.spring.course.model.PageModel;
+import com.spring.course.model.PageRequestModel;
 import com.spring.course.service.RequestStageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +25,11 @@ public class RequestStageController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RequestStage> getById(@PathVariable("id") Long id){
-        return ResponseEntity.ok(requestStageService.getById(id));
+    public ResponseEntity<PageModel<RequestStage>> getById(@RequestParam("page") int page, @RequestParam("size") int size, @PathVariable("id") Long id){
+        PageRequestModel pageRequestModel = new PageRequestModel(page, size);
+        PageModel<RequestStage> requestStagePageModel = requestStageService.listAllByRequestIdOnLazyMode(id, pageRequestModel);
+
+        return ResponseEntity.ok(requestStagePageModel);
     }
 
 

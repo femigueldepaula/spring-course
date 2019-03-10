@@ -2,11 +2,17 @@ package com.spring.course.service.impl;
 
 import com.spring.course.domain.User;
 import com.spring.course.exception.NotFoundException;
+import com.spring.course.model.PageModel;
+import com.spring.course.model.PageRequestModel;
 import com.spring.course.repository.UserRepository;
 import com.spring.course.service.UserService;
 import com.spring.course.util.HashUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -46,5 +52,20 @@ public class UserServiceImpl implements UserService {
         password = HashUtil.getSecureHash(password);
         Optional<User> result = userRepository.login(email, password);
         return result.get();
+    }
+
+    @Override
+    public PageModel<User> listAllOnLazyMode(PageRequestModel pageRequestModel){
+        Pageable pageble = PageRequest.of(pageRequestModel.getPage(), pageRequestModel.getSize());
+        Page<User> page = userRepository.findAll(pageble);
+
+        PageModel<User> pageModel = new PageModel<>(
+                (int)page.getTotalElements(),
+                page.getSize(),
+                page.getTotalPages(),
+                page.getContent()
+        );
+
+        return pageModel;
     }
 }

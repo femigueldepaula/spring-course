@@ -3,6 +3,8 @@ package com.spring.course.controller;
 import com.spring.course.domain.Request;
 import com.spring.course.domain.User;
 import com.spring.course.dto.UserLoginDto;
+import com.spring.course.model.PageModel;
+import com.spring.course.model.PageRequestModel;
 import com.spring.course.service.RequestService;
 import com.spring.course.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -43,8 +45,10 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> listAll(){
-        return ResponseEntity.ok(userService.listAll());
+    public ResponseEntity<PageModel<User>> listAll(@RequestParam("page") int page, @RequestParam("size") int size){
+        PageRequestModel pageRequestModel = new PageRequestModel(page, size);
+
+        return ResponseEntity.ok(userService.listAllOnLazyMode(pageRequestModel));
     }
 
     @PostMapping("/login")
@@ -53,7 +57,10 @@ public class UserController {
     }
 
     @GetMapping("/{id}/requests")
-    public ResponseEntity<List<Request>> listAllRequestsById(@PathVariable("id") Long id){
-        return ResponseEntity.ok(requestService.listaAllByOwnerId(id));
+    public ResponseEntity<PageModel<Request>> listAllRequestsById(@RequestParam("page") int page, @RequestParam("size") int size, @PathVariable("id") Long id){
+
+        PageRequestModel pageRequestModel = new PageRequestModel(page, size);
+        PageModel<Request> pageModel = requestService.listAllByOwnerIdOnLazyModel(id,pageRequestModel);
+        return ResponseEntity.ok(pageModel);
     }
 }
