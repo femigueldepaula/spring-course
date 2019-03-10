@@ -68,4 +68,9 @@ public class UserServiceImpl implements UserService {
 
         return pageModel;
     }
+
+    @Override
+    public int updateRole(User user){
+        return userRepository.updateRole(user.getId(), user.getRole());
+    }
 }

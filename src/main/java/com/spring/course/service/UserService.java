@@ -14,4 +14,5 @@ public interface UserService {
     List<User> listAll();
     User login(String email, String password);
     PageModel<User> listAllOnLazyMode(PageRequestModel pageRequestModel);
+    int updateRole(User user);
 }

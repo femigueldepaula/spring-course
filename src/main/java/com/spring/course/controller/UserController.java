@@ -3,6 +3,7 @@ package com.spring.course.controller;
 import com.spring.course.domain.Request;
 import com.spring.course.domain.User;
 import com.spring.course.dto.UserLoginDto;
+import com.spring.course.dto.UserUpdateRoleDto;
 import com.spring.course.model.PageModel;
 import com.spring.course.model.PageRequestModel;
 import com.spring.course.service.RequestService;
@@ -65,5 +66,17 @@ public class UserController {
         PageRequestModel pageRequestModel = new PageRequestModel(page, size);
         PageModel<Request> pageModel = requestService.listAllByOwnerIdOnLazyModel(id,pageRequestModel);
         return ResponseEntity.ok(pageModel);
+    }
+
+    @PatchMapping("/role/{id}")
+    public ResponseEntity<?> updateRole(@RequestBody UserUpdateRoleDto userUpdateRoleDto,
+                                        @PathVariable("id") Long id) {
+        User user = User.builder()
+                .id(id)
+                .role(userUpdateRoleDto.getRole())
+                .build();
+
+        userService.updateRole(user);
+        return ResponseEntity.ok().build();
     }
 }
