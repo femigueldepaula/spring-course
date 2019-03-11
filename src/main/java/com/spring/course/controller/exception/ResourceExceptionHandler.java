@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @ControllerAdvice
 public class ResourceExceptionHandler extends ResponseEntityExceptionHandler {
@@ -28,11 +30,16 @@ public class ResourceExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        ApiError error = ApiError.builder()
-                .code(HttpStatus.BAD_REQUEST.value())
-                .message(ex.getBindingResult().getAllErrors().get(0).getDefaultMessage())
-                .date(new Date())
-                .build();
+
+        List<String> errors = new ArrayList<>();
+
+        ex.getBindingResult().getAllErrors().forEach(error -> {
+            errors.add(error.getDefaultMessage());
+        });
+
+        String defaultMessage = "Invalid field(s)";
+
+        ApiErrorList error = new ApiErrorList(HttpStatus.BAD_REQUEST.value(), defaultMessage, new Date(), errors);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
