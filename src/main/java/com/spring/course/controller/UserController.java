@@ -1,8 +1,11 @@
 package com.spring.course.controller;
 
+import com.spring.course.converter.UserConverter;
 import com.spring.course.domain.Request;
 import com.spring.course.domain.User;
 import com.spring.course.dto.UserLoginDto;
+import com.spring.course.dto.UserSaveDto;
+import com.spring.course.dto.UserUpdateDto;
 import com.spring.course.dto.UserUpdateRoleDto;
 import com.spring.course.model.PageModel;
 import com.spring.course.model.PageRequestModel;
@@ -14,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -27,14 +31,21 @@ public class UserController {
     @Autowired
     private RequestService requestService;
 
+    @Autowired
+    private UserConverter userConverter;
+
     @PostMapping
-    public ResponseEntity<User> save(@RequestBody User user){
+    public ResponseEntity<User> save(@RequestBody @Valid UserSaveDto userDto){
+
+        User user = userConverter.convertToUser(userDto);
         User createdUser = userService.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> save(@PathVariable(name = "id") Long id, @RequestBody User user){
+    public ResponseEntity<User> update(@PathVariable(name = "id") Long id, @RequestBody @Valid UserUpdateDto userUpdateDto){
+
+        User user = userConverter.convertToUser(userUpdateDto);
         user.setId(id);
         User updatedUser = userService.update(user);
         return ResponseEntity.ok(updatedUser);
@@ -54,7 +65,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody UserLoginDto userLoginDto){
+    public ResponseEntity<User> login(@RequestBody @Valid UserLoginDto userLoginDto){
         return ResponseEntity.ok(userService.login(userLoginDto.getEmail(), userLoginDto.getPassword()));
     }
 
@@ -69,7 +80,7 @@ public class UserController {
     }
 
     @PatchMapping("/role/{id}")
-    public ResponseEntity<?> updateRole(@RequestBody UserUpdateRoleDto userUpdateRoleDto,
+    public ResponseEntity<?> updateRole(@RequestBody @Valid UserUpdateRoleDto userUpdateRoleDto,
                                         @PathVariable("id") Long id) {
         User user = User.builder()
                 .id(id)
