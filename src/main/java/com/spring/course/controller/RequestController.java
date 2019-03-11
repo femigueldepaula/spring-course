@@ -1,7 +1,10 @@
 package com.spring.course.controller;
 
+import com.spring.course.converter.RequestConverter;
 import com.spring.course.domain.Request;
 import com.spring.course.domain.RequestStage;
+import com.spring.course.dto.RequestSavedto;
+import com.spring.course.dto.RequestUpdatedto;
 import com.spring.course.model.PageModel;
 import com.spring.course.model.PageRequestModel;
 import com.spring.course.service.RequestService;
@@ -12,7 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Pageable;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -26,15 +29,22 @@ public class RequestController {
     @Autowired
     private RequestStageService requestStageService;
 
+    @Autowired
+    private RequestConverter requestConverter;
+
     @PostMapping
-    public ResponseEntity<Request> save(@RequestBody Request request){
+    public ResponseEntity<Request> save(@RequestBody @Valid RequestSavedto requestdto){
+
+        Request request = requestConverter.convertToRequest(requestdto);
         Request createdRequest = requestService.save(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdRequest);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Request> update(@PathVariable("id") Long id, @RequestBody Request request){
+    public ResponseEntity<Request> update(@PathVariable(name = "id") Long id, @RequestBody @Valid RequestUpdatedto requestUpdatedto){
+
+        Request request = requestConverter.convertToRequest(requestUpdatedto);
         request.setId(id);
         return ResponseEntity.ok(requestService.update(request));
     }
