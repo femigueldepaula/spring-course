@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    password: "q1w2e3r4"
+    url: "jdbc:mysql://spring-course-intance-db.catfoonfaz0m.us-east-2.rds.amazonaws.com:3306/spring_course"
+    username: "root"
+  jpa:
+    hibernate:
+      show-sql: false

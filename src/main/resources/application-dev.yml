@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    password: "q1w2e3r4@"
+    url: "jdbc:mysql://localhost:3306/spring_course_db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
+    username: "root"
+  jpa:
+    hibernate:
+      show-sql: true
