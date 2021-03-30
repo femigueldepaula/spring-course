@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -22,6 +24,8 @@ import java.util.List;
 @RequestMapping("requests")
 @Slf4j
 public class RequestController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RequestController.class);
 
     @Autowired
     private RequestService requestService;
@@ -35,6 +39,7 @@ public class RequestController {
     @PostMapping
     public ResponseEntity<Request> save(@RequestBody @Valid RequestSavedto requestdto){
 
+        LOGGER.info("Request controller -> Teste");
         Request request = requestConverter.convertToRequest(requestdto);
         Request createdRequest = requestService.save(request);
 
@@ -43,7 +48,6 @@ public class RequestController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Request> update(@PathVariable(name = "id") Long id, @RequestBody @Valid RequestUpdatedto requestUpdatedto){
-
         Request request = requestConverter.convertToRequest(requestUpdatedto);
         request.setId(id);
         return ResponseEntity.ok(requestService.update(request));

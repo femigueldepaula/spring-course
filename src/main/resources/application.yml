@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: spring-course
   profiles:
     active: dev
   datasource:
@@ -8,3 +10,5 @@ spring:
       ddl-auto: update
   jackson:
     default-property-inclusion: non-null
+logging:
+  file: logs/spring-boot-elk.log
