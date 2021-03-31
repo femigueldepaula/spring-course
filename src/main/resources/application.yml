@@ -10,5 +10,5 @@ spring:
       ddl-auto: update
   jackson:
     default-property-inclusion: non-null
-logging:
-  file: logs/spring-boot-elk.log
+#logging:
+#  file: logs/spring-boot-elk.log

@@ -3,10 +3,7 @@ package com.spring.course.controller;
 import com.spring.course.converter.UserConverter;
 import com.spring.course.domain.Request;
 import com.spring.course.domain.User;
-import com.spring.course.dto.UserLoginDto;
-import com.spring.course.dto.UserSaveDto;
-import com.spring.course.dto.UserUpdateDto;
-import com.spring.course.dto.UserUpdateRoleDto;
+import com.spring.course.dto.*;
 import com.spring.course.model.PageModel;
 import com.spring.course.model.PageRequestModel;
 import com.spring.course.security.JwtManager;
@@ -78,7 +75,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody @Valid UserLoginDto userLoginDto){
+    public ResponseEntity<UserLoginResponseDto> login(@RequestBody @Valid UserLoginDto userLoginDto){
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                 userLoginDto.getEmail(), userLoginDto.getPassword());
 
@@ -93,9 +90,9 @@ public class UserController {
                 .map(authority -> authority.getAuthority())
                 .collect(Collectors.toList());
 
-        String jwt = jwtManager.createToken(userSpring.getUsername(), roles);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(jwtManager.createToken(userSpring.getUsername(), roles));
 
-        return ResponseEntity.ok(jwt);
     }
 
     @GetMapping("/{id}/requests")
