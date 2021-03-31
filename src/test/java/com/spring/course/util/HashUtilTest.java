@@ -10,7 +10,7 @@ public class HashUtilTest {
 
     @Test
     public void getSecureHash() {
-        String hash = HashUtil.getSecureHash("123");
+        String hash = HashUtil.getSecureHash("q1w2e3r4@");
         System.out.println(hash);
         assertThat(hash.length()).isEqualTo(64);
     }
