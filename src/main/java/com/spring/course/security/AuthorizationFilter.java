@@ -27,8 +27,6 @@ import java.util.List;
 
 public class AuthorizationFilter extends OncePerRequestFilter {
 
-    @Autowired JwtManager jwtManager;
-
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest,
         HttpServletResponse httpServletResponse,
@@ -36,6 +34,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         String jwt = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
+
         if(jwt == null || !jwt.startsWith(SecurityConstant.JWT_PROVIDER)) {
             buildResponseUnauthorizedError(SecurityConstant.JWT_INVALID_MSG, httpServletResponse);
             return;
@@ -43,7 +42,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         jwt = jwt.replace(SecurityConstant.JWT_PROVIDER, "");
 
         try {
-            Claims claims = jwtManager.parseToken(jwt);
+            Claims claims = new JwtManager().parseToken(jwt);
             String email = claims.getSubject();
             List<String> roles = (List<String>) claims.get(SecurityConstant.JWT_ROLE_KEY);
             List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
