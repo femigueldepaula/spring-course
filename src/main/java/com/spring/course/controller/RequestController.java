@@ -7,12 +7,14 @@ import com.spring.course.dto.RequestSavedto;
 import com.spring.course.dto.RequestUpdatedto;
 import com.spring.course.model.PageModel;
 import com.spring.course.model.PageRequestModel;
+import com.spring.course.security.AccessManager;
 import com.spring.course.service.RequestService;
 import com.spring.course.service.RequestStageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,14 +29,10 @@ public class RequestController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestController.class);
 
-    @Autowired
-    private RequestService requestService;
-
-    @Autowired
-    private RequestStageService requestStageService;
-
-    @Autowired
-    private RequestConverter requestConverter;
+    @Autowired private RequestService requestService;
+    @Autowired private RequestStageService requestStageService;
+    @Autowired private RequestConverter requestConverter;
+    @Autowired private AccessManager accessManager;
 
     @PostMapping
     public ResponseEntity<Request> save(@RequestBody @Valid RequestSavedto requestdto){
@@ -46,6 +44,7 @@ public class RequestController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdRequest);
     }
 
+    @PreAuthorize("@accessManager.isRequestOwner(#id)")
     @PutMapping("/{id}")
     public ResponseEntity<Request> update(@PathVariable(name = "id") Long id, @RequestBody @Valid RequestUpdatedto requestUpdatedto){
         Request request = requestConverter.convertToRequest(requestUpdatedto);
