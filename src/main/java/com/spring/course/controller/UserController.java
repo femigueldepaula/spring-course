@@ -6,6 +6,7 @@ import com.spring.course.domain.User;
 import com.spring.course.dto.*;
 import com.spring.course.model.PageModel;
 import com.spring.course.model.PageRequestModel;
+import com.spring.course.security.AccessManager;
 import com.spring.course.security.JwtManager;
 import com.spring.course.service.RequestService;
 import com.spring.course.service.UserService;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,15 +36,11 @@ public class UserController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @Autowired private UserService userService;
-
     @Autowired private RequestService requestService;
-
     @Autowired private AuthenticationManager authenticationManager;
-
     @Autowired private JwtManager jwtManager;
-
-    @Autowired
-    private UserConverter userConverter;
+    @Autowired private UserConverter userConverter;
+    @Autowired private AccessManager accessManager;
 
     @Secured({"ROLE_ADMINISTRATOR"})
     @PostMapping
@@ -54,6 +52,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
+    @PreAuthorize("@accessManager.isOwner(#id)")
     @PutMapping("/{id}")
     public ResponseEntity<User> update(@PathVariable(name = "id") Long id, @RequestBody @Valid UserUpdateDto userUpdateDto){
 
