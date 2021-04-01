@@ -38,7 +38,6 @@ public class JwtManager {
                 .setSigningKey(SecurityConstant.API_KEY.getBytes(StandardCharsets.UTF_8))
                 .parseClaimsJws(jwt)
                 .getBody();
-
         return claims;
     }
 }
