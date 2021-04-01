@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -43,6 +44,7 @@ public class UserController {
     @Autowired
     private UserConverter userConverter;
 
+    @Secured({"ROLE_ADMINISTRATOR"})
     @PostMapping
     public ResponseEntity<User> save(@RequestBody @Valid UserSaveDto userDto){
 
@@ -105,6 +107,7 @@ public class UserController {
         return ResponseEntity.ok(pageModel);
     }
 
+    @Secured({"ROLE_ADMINISTRATOR"})
     @PatchMapping("/role/{id}")
     public ResponseEntity<?> updateRole(@RequestBody @Valid UserUpdateRoleDto userUpdateRoleDto,
                                         @PathVariable("id") Long id) {
